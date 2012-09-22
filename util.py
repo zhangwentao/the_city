@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#-*- coding:utf8 -*-
 import httplib
 import urllib
 import json
@@ -33,6 +35,7 @@ def api_proxy(api_url,param_obj={},method='GET'):
 
 def api_proxy_with_access_token(api_url,param_obj={},method='GET'):
 	'''get data(object) from weibo http api with access token that was fore obtained.'''
-	param_obj['access_token'] = access_token
-	obj = api_proxy(api_url,param_obj,method);
+	param_obj_inner ={'access_token':access_token}
+	param_obj_inner.update(param_obj) 
+	obj = api_proxy(api_url,param_obj_inner,method);
 	return obj
