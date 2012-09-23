@@ -43,6 +43,16 @@ def api_proxy_with_access_token(api_url,param_obj={},method='GET'):
 def obtain_access_key(client_id,client_secret,usrname,passwd):
 	access_token = get_access_token(client_id,client_secret,usrname,passwd)	
 
+def cmp(a,b):
+        a = int(a)
+        b = int(b)
+        if a > b:
+                return 1
+        elif a == b:
+                return 0
+        else :
+                return -1
+
 class Client:
 	client_id=''
 	client_secret=''
@@ -56,3 +66,10 @@ class Client:
 		param_obj_inner = {'access_token':self.access_token}
 		param_obj_inner.update(param_obj)
 		return api_proxy(api_url,param_obj_inner,method)
+	def statuses_mentioned(self):
+		api_url = "statuses/mentions"
+		since_id = 0
+		count = 200
+		filter_by_type = 1	
+		param_obj = {'since_id':since_id,'count':count,'filter_by_type':filter_by_type}
+		return self.proxy_for(api_url,param_obj)
