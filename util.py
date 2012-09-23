@@ -117,7 +117,32 @@ class InfoWriter():
 		urlretrieve(pic_url,file_name)	
 		
 	def writeWeibo(self,weibo_text):
-		weibo_file_path = info_dir_path + weibo_file_name	
-		weibo_file = file(weibo_file_path,'w')
-		weibo_file.write((weibo_text).encode('gb2312'))
-		weibo_file.close()
+		self.write_txt_file(self.__class__.weibo_file_name,weibo_text)	
+	
+	def write_fiends_ids(self,id_list):
+		ids_str = ''
+		for friend_id in id_list:
+			ids_str += (str(friend_id)+' ') 
+ 	      	write_txt_file(self.__class__.friends_ids_file_name,ids_str) 
+
+	def write_txt_file(self,file_name,text):
+		file_path = self.__class__.info_dir_path + file_name	
+		file = file(file_path,'w')
+		file.write((text).encode('gb2312'))
+		file.close()
+	
+	def write_info(self,status_obj):
+		self.writeWeibo(status_obj['text'])
+		self.writePic(status_obj['user']['id'])
+		self.write_fiends_ids(status_obj['user']['fids'])
+		lock_file_path = self.__class__.info_dir_path+self.__class__.lock_file_path
+		self.write_txt_file(lock_file_path,'1')	
+	
+	def is_lock():
+		lock_file_path = self.__class__.info_dir_path+self.__class__.lock_file_path
+		result = file(lock_file_path).readline()
+		lock = int(result)
+		if lock:
+			return True
+		else:
+			return False
