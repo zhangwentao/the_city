@@ -66,6 +66,12 @@ class Client:
 		param_obj = {'since_id':since_id,'count':count,'filter_by_type':filter_by_type}
 		return self.proxy_for(api_url,param_obj)
 
+	def get_somebody_friends_ids(self,somebody_id):
+		api_url = "friendships/friends/bilateral/ids"	
+		count = 1999
+		param_obj = {'uid':somebody_id,'count':count}	
+		return self.proxy_for(api_url,param_obj)
+
 def status_cmp(a,b):
 	a_id = int(a['id'])
 	b_id = int(b['id'])
