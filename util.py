@@ -7,6 +7,7 @@ import json
 
 HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
 access_token = ""
+urlretrieve = urllib.urlretrieve
 
 def get_access_token(client_id,client_secret,usrname,passwd):
 	param_obj = {'grant_type':'password'};
@@ -97,3 +98,12 @@ class Status_list():
 	
 	def show(self):
 		return self.status_list
+
+class InfoWriter():
+	info_dir_path = ''
+	weibo_file_name = ''
+	friends_ids_file_name = ''
+	lock_file_name = ''				
+	def writePic(self,user_id,pic_url):
+		file_name = self.__class__.info_dir_path + user_id+'jpeg' 
+		urlretrieve(pic_url,file_name)	
