@@ -43,16 +43,6 @@ def api_proxy_with_access_token(api_url,param_obj={},method='GET'):
 def obtain_access_key(client_id,client_secret,usrname,passwd):
 	access_token = get_access_token(client_id,client_secret,usrname,passwd)	
 
-def cmp(a,b):
-        a = int(a)
-        b = int(b)
-        if a > b:
-                return 1
-        elif a == b:
-                return 0
-        else:
-                return -1
-
 class Client:
 	client_id=''
 	client_secret=''
@@ -90,11 +80,14 @@ class Status_list():
 	def __init__(self):
 		self.status_list = []
 
-	def put_in(new_list):
+	def put_in(self,new_list):
 		new_list.sort(status_cmp)
 		self.status_list.extend(new_list)				
 		latest_status_id = new_list[len(new_list)-1]['id']
 		return latest_status_id	
 
-	def pop_oldest():
+	def pop_oldest(self):
 		self.status_list.pop()	
+	
+	def show(self):
+		return self.status_list
