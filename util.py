@@ -104,6 +104,20 @@ class InfoWriter():
 	weibo_file_name = ''
 	friends_ids_file_name = ''
 	lock_file_name = ''				
+
+	@classmethod
+	def init(cls,info_dir_path,weibo_file_name,friends_ids_file_name,lock_file_name):
+		cls.info_dir_path = info_dir_path
+		cls.weibo_file_name = weibo_file_name
+		cls.friends_ids_file_name = friends_ids_file_name
+		cls.lock_file_name = lock_file_name	
+
 	def writePic(self,user_id,pic_url):
 		file_name = self.__class__.info_dir_path + user_id+'jpeg' 
 		urlretrieve(pic_url,file_name)	
+		
+	def writeWeibo(self,weibo_text):
+		weibo_file_path = info_dir_path + weibo_file_name	
+		weibo_file = file(weibo_file_path,'w')
+		weibo_file.write((weibo_text).encode('gb2312'))
+		weibo_file.close()
