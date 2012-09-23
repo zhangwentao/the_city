@@ -50,7 +50,7 @@ def cmp(a,b):
                 return 1
         elif a == b:
                 return 0
-        else :
+        else:
                 return -1
 
 class Client:
@@ -60,16 +60,28 @@ class Client:
 	def init(cls,client_id,client_secret):
 		cls.client_id = client_id
 		cls.client_secret = client_secret
+
 	def __init__(self,user_name,pass_word):
 		self.access_token = get_access_token(self.__class__.client_id,self.__class__.client_secret,user_name,pass_word)
+
 	def proxy_for(self,api_url,param_obj={},method='GET'):
 		param_obj_inner = {'access_token':self.access_token}
 		param_obj_inner.update(param_obj)
 		return api_proxy(api_url,param_obj_inner,method)
-	def statuses_mentioned(self):
+
+	def statuses_mentioned(self,since_id=0):
 		api_url = "statuses/mentions"
-		since_id = 0
 		count = 200
 		filter_by_type = 1	
 		param_obj = {'since_id':since_id,'count':count,'filter_by_type':filter_by_type}
 		return self.proxy_for(api_url,param_obj)
+
+def status_cmp(a,b):
+	a_id = int(a['id'])
+	b_id = int(b['id'])
+	if a_id > b_id:
+		return 1
+	elif a_id == b_id:
+		return 0
+	else:
+		return -1
