@@ -94,7 +94,7 @@ class Status_list():
 		return latest_status_id	
 
 	def pop_oldest(self):
-		self.status_list.pop()	
+		return self.status_list.pop()	
 	
 	def show(self):
 		return self.status_list
@@ -113,7 +113,7 @@ class InfoWriter():
 		cls.lock_file_name = lock_file_name	
 
 	def writePic(self,user_id,pic_url):
-		file_name = self.__class__.info_dir_path + user_id+'jpeg' 
+		file_name = self.__class__.info_dir_path + str(user_id)+'jpeg' 
 		urlretrieve(pic_url,file_name)	
 		
 	def writeWeibo(self,weibo_text):
@@ -123,23 +123,23 @@ class InfoWriter():
 		ids_str = ''
 		for friend_id in id_list:
 			ids_str += (str(friend_id)+' ') 
- 	      	write_txt_file(self.__class__.friends_ids_file_name,ids_str) 
+ 	      	self.write_txt_file(self.__class__.friends_ids_file_name,ids_str) 
 
 	def write_txt_file(self,file_name,text):
 		file_path = self.__class__.info_dir_path + file_name	
-		file = file(file_path,'w')
-		file.write((text).encode('gb2312'))
-		file.close()
+		text_file = file(file_path,'w')
+		text_file.write((text).encode('gb2312'))
+		text_file.close()
 	
 	def write_info(self,status_obj):
 		self.writeWeibo(status_obj['text'])
-		self.writePic(status_obj['user']['id'])
+		self.writePic(status_obj['user']['id'],status_obj['user']['profile_image_url'])
 		self.write_fiends_ids(status_obj['user']['fids'])
-		lock_file_path = self.__class__.info_dir_path+self.__class__.lock_file_path
-		self.write_txt_file(lock_file_path,'1')	
-	
-	def is_lock():
-		lock_file_path = self.__class__.info_dir_path+self.__class__.lock_file_path
+		self.write_txt_file(self.__class__.lock_file_name,'1')	
+
+	@classmethod	
+	def is_lock(cls):
+		lock_file_path = cls.info_dir_path+cls.lock_file_name
 		result = file(lock_file_path).readline()
 		lock = int(result)
 		if lock:
