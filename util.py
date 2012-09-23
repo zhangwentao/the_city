@@ -85,3 +85,16 @@ def status_cmp(a,b):
 		return 0
 	else:
 		return -1
+
+class Status_list():
+	def __init__(self):
+		self.status_list = []
+
+	def put_in(new_list):
+		new_list.sort(status_cmp)
+		self.status_list.extend(new_list)				
+		latest_status_id = new_list[len(new_list)-1]['id']
+		return latest_status_id	
+
+	def pop_oldest():
+		self.status_list.pop()	
