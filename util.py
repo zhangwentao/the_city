@@ -7,10 +7,7 @@ import json
 import glob
 import os
 
-#headers2 = {"Content-type": "application/x-www-form-urlencoded"}
-#HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
 HEADERS = {"Content-type": "application/x-www-form-urlencoded"}
-access_token = ""
 urlretrieve = urllib.urlretrieve
 
 def get_access_token(client_id,client_secret,usrname,passwd):
@@ -42,20 +39,19 @@ def api_proxy(api_url,param_obj={},method='GET'):
 	obj = json.loads(backen_data)
 	return obj
 
-def api_proxy_with_access_token(api_url,param_obj={},method='GET'):
-	'''get data(object) from weibo http api with access token that was fore obtained.'''
-	param_obj_inner ={'access_token':access_token}
-	param_obj_inner.update(param_obj) 
-	obj = api_proxy(api_url,param_obj_inner,method);
-	return obj
-
-def obtain_access_key(client_id,client_secret,usrname,passwd):
-	access_token = get_access_token(client_id,client_secret,usrname,passwd)	
-
 def get_comment_txt(comment_file_path):
 	result = file(comment_file_path).readline()		
-	print result
 	return result
+
+def status_cmp(a,b):
+	a_id = int(a['id'])
+	b_id = int(b['id'])
+	if a_id > b_id:
+		return 1
+	elif a_id == b_id:
+		return 0
+	else:
+		return -1
 
 class Client:
 	client_id=''
@@ -90,17 +86,6 @@ class Client:
 		api_url = "comments/create"	
 		param_obj = {'id':weibo_id,'comment':comment}
 	 	return self.proxy_for(api_url,param_obj,'POST')	
-	
-	
-def status_cmp(a,b):
-	a_id = int(a['id'])
-	b_id = int(b['id'])
-	if a_id > b_id:
-		return 1
-	elif a_id == b_id:
-		return 0
-	else:
-		return -1
 
 class Status_list():
 	def __init__(self):
@@ -132,6 +117,16 @@ class InfoWriter():
 		cls.friends_ids_file_name = friends_ids_file_name
 		cls.user_name_file_name = user_name_file_name
 		cls.lock_file_name = lock_file_name	
+	
+	@classmethod	
+	def is_lock(cls):
+		lock_file_path = cls.info_dir_path+cls.lock_file_name
+		result = file(lock_file_path).readline()
+		lock = int(result)
+		if lock:
+			return True
+		else:
+			return False
 
 	def writePic(self,user_id,pic_url):
 		file_name = self.__class__.info_dir_path + str(user_id)+'.jpeg' 
@@ -161,13 +156,3 @@ class InfoWriter():
 		self.write_fiends_ids(status_obj['user']['fids'])
 		self.write_name(status_obj['user']['name'])
 		self.write_txt_file(self.__class__.lock_file_name,'1')	
-
-	@classmethod	
-	def is_lock(cls):
-		lock_file_path = cls.info_dir_path+cls.lock_file_name
-		result = file(lock_file_path).readline()
-		lock = int(result)
-		if lock:
-			return True
-		else:
-			return False

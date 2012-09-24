@@ -4,6 +4,7 @@
 import util
 import time
 import json
+
 KEY_FILE_PATH = './keys.json'
 
 Client = util.Client
@@ -16,10 +17,10 @@ status_list = Status_list()
 latest_status_id=0
 comment_txt_file_path = ''
 keys_obj={}
+
 def main():
 	global comment_txt_file_path
 	global keys_obj
-	print 'init'
 	global city_position
 	keys_obj = get_keys()
 	Client.init(keys_obj['client_id'],keys_obj['client_secret'])
@@ -30,7 +31,6 @@ def main():
 
 def get_keys():
 	data = file(KEY_FILE_PATH).readline()
-	print data
 	return json.loads(data)
 
 def run():
@@ -51,11 +51,6 @@ def get_status():
 def write_to_local():
 	if len(status_list.show()) > 0:
 		cur_status = status_list.pop_oldest()
-		print cur_status
-		print status_list.show()
-		print 'go:\n'
-		print cur_status
-		print city_position.get_somebody_friends_ids(cur_status['user']['id'])
 		cur_status['user']['fids'] = city_position.get_somebody_friends_ids(cur_status['user']['id'])['ids']
 		util.delete_file_by_type(keys_obj['info_dir_path'],'jpeg')
 		writer = InfoWriter()
