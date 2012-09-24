@@ -15,9 +15,10 @@ city_position=None
 status_list = Status_list()
 latest_status_id=0
 comment_txt_file_path = ''
-
+keys_obj={}
 def main():
 	global comment_txt_file_path
+	global keys_obj
 	print 'init'
 	global city_position
 	keys_obj = get_keys()
@@ -56,6 +57,7 @@ def write_to_local():
 		print cur_status
 		print city_position.get_somebody_friends_ids(cur_status['user']['id'])
 		cur_status['user']['fids'] = city_position.get_somebody_friends_ids(cur_status['user']['id'])['ids']
+		util.delete_file_by_type(keys_obj['info_dir_path'],'jpeg')
 		writer = InfoWriter()
 		city_position.create_comment(cur_status['id'],util.get_comment_txt(comment_txt_file_path))
 		writer.write_info(cur_status)
