@@ -5,7 +5,9 @@ import httplib
 import urllib
 import json
 
-HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
+#headers2 = {"Content-type": "application/x-www-form-urlencoded"}
+#HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
+HEADERS = {"Content-type": "application/x-www-form-urlencoded"}
 access_token = ""
 urlretrieve = urllib.urlretrieve
 
@@ -44,6 +46,11 @@ def api_proxy_with_access_token(api_url,param_obj={},method='GET'):
 def obtain_access_key(client_id,client_secret,usrname,passwd):
 	access_token = get_access_token(client_id,client_secret,usrname,passwd)	
 
+def get_comment_txt(comment_file_path):
+	result = file(comment_file_path).readline()		
+	print result
+	return result
+
 class Client:
 	client_id=''
 	client_secret=''
@@ -72,7 +79,13 @@ class Client:
 		count = 1999
 		param_obj = {'uid':somebody_id,'count':count}	
 		return self.proxy_for(api_url,param_obj)
-
+	
+	def create_comment(self,weibo_id,comment):
+		api_url = "comments/create"	
+		param_obj = {'id':weibo_id,'comment':comment}
+	 	return self.proxy_for(api_url,param_obj,'POST')	
+	
+	
 def status_cmp(a,b):
 	a_id = int(a['id'])
 	b_id = int(b['id'])
@@ -103,22 +116,27 @@ class InfoWriter():
 	info_dir_path = ''
 	weibo_file_name = ''
 	friends_ids_file_name = ''
+	user_name_file_name = ''
 	lock_file_name = ''				
 
 	@classmethod
-	def init(cls,info_dir_path,weibo_file_name,friends_ids_file_name,lock_file_name):
+	def init(cls,info_dir_path,weibo_file_name,friends_ids_file_name,lock_file_name,user_name_file_name):
 		cls.info_dir_path = info_dir_path
 		cls.weibo_file_name = weibo_file_name
 		cls.friends_ids_file_name = friends_ids_file_name
+		cls.user_name_file_name = user_name_file_name
 		cls.lock_file_name = lock_file_name	
 
 	def writePic(self,user_id,pic_url):
-		file_name = self.__class__.info_dir_path + str(user_id)+'jpeg' 
+		file_name = self.__class__.info_dir_path + str(user_id)+'.jpeg' 
 		urlretrieve(pic_url,file_name)	
 		
 	def writeWeibo(self,weibo_text):
 		self.write_txt_file(self.__class__.weibo_file_name,weibo_text)	
 	
+	def write_name(self,user_name):
+		self.write_txt_file(self.__class__.user_name_file_name,user_name)
+
 	def write_fiends_ids(self,id_list):
 		ids_str = ''
 		for friend_id in id_list:
@@ -135,6 +153,7 @@ class InfoWriter():
 		self.writeWeibo(status_obj['text'])
 		self.writePic(status_obj['user']['id'],status_obj['user']['profile_image_url'])
 		self.write_fiends_ids(status_obj['user']['fids'])
+		self.write_name(status_obj['user']['name'])
 		self.write_txt_file(self.__class__.lock_file_name,'1')	
 
 	@classmethod	
