@@ -4,6 +4,8 @@
 import httplib
 import urllib
 import json
+import glob
+import os
 
 #headers2 = {"Content-type": "application/x-www-form-urlencoded"}
 #HEADERS = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
@@ -24,6 +26,10 @@ def get_access_token(client_id,client_secret,usrname,passwd):
 	obj = json.loads(backen_data)
 	return obj['access_token']
 
+def delete_file_by_type(dir_path,file_type):
+	for f in glob.glob(dir_path+'*.'+file_type):
+		os.unlink(f)
+		
 def api_proxy(api_url,param_obj={},method='GET'):
 	conn = httplib.HTTPSConnection("api.weibo.com")  
 	param=urllib.urlencode(param_obj)
