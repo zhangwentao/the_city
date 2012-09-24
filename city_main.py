@@ -5,7 +5,6 @@ import util
 import time
 import json
 KEY_FILE_PATH = './keys.json'
-dATA_DIR_PATH = './info/' 
 
 Client = util.Client
 Status_list = util.Status_list
@@ -15,15 +14,19 @@ lock=False
 city_position=None
 status_list = Status_list()
 latest_status_id=0
+comment_txt_file_path = ''
 
 def main():
+	global comment_txt_file_path
 	print 'init'
 	global city_position
 	keys_obj = get_keys()
 	Client.init(keys_obj['client_id'],keys_obj['client_secret'])
 	city_position = Client(keys_obj['username1'],keys_obj['password1'])
-	InfoWriter.init(keys_obj['info_dir_path'],keys_obj['weibo_file_name'],keys_obj['friends_ids_file_name'],keys_obj['lock_file_name'])
-	
+	InfoWriter.init(keys_obj['info_dir_path'],keys_obj['weibo_file_name'],keys_obj['friends_ids_file_name'],keys_obj['lock_file_name'],keys_obj['user_name_file_name'])
+	comment_txt_file_path = keys_obj['info_dir_path']+keys_obj['comment_txt_file_name']
+	run()
+
 def get_keys():
 	data = file(KEY_FILE_PATH).readline()
 	print data
@@ -54,5 +57,6 @@ def write_to_local():
 		print city_position.get_somebody_friends_ids(cur_status['user']['id'])
 		cur_status['user']['fids'] = city_position.get_somebody_friends_ids(cur_status['user']['id'])['ids']
 		writer = InfoWriter()
+		city_position.create_comment(cur_status['id'],util.get_comment_txt(comment_txt_file_path))
 		writer.write_info(cur_status)
 main()
