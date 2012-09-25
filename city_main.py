@@ -19,6 +19,7 @@ comment_txt_file_path = ''
 keys_obj={}
 
 def main():
+	global latest_status_id
 	global comment_txt_file_path
 	global keys_obj
 	global city_position
@@ -27,6 +28,8 @@ def main():
 	city_position = Client(keys_obj['username1'],keys_obj['password1'])
 	InfoWriter.init(keys_obj['info_dir_path'],keys_obj['weibo_file_name'],keys_obj['friends_ids_file_name'],keys_obj['lock_file_name'],keys_obj['user_name_file_name'])
 	comment_txt_file_path = keys_obj['info_dir_path']+keys_obj['comment_txt_file_name']
+	latest_status_id = file(keys_obj['info_dir_path']+keys_obj['last_weibo_id_file_name']).readline() 
+	print latest_status_id
 	run()
 
 def get_keys():
@@ -51,6 +54,7 @@ def get_status():
 def write_to_local():
 	if len(status_list.show()) > 0:
 		cur_status = status_list.pop_oldest()
+		util.write_txt_file(keys_obj['info_dir_path']+keys_obj['last_weibo_id_file_name'],str(cur_status['id']))
 		cur_status['user']['fids'] = city_position.get_somebody_friends_ids(cur_status['user']['id'])['ids']
 		util.delete_file_by_type(keys_obj['info_dir_path'],'jpeg')
 		writer = InfoWriter()

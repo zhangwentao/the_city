@@ -27,6 +27,11 @@ def delete_file_by_type(dir_path,file_type):
 	for f in glob.glob(dir_path+'*.'+file_type):
 		os.unlink(f)
 		
+def write_txt_file(file_path,text):
+	text_file = file(file_path,'w')
+	text_file.write((text).encode('gb2312'))
+	text_file.close()
+
 def api_proxy(api_url,param_obj={},method='GET'):
 	conn = httplib.HTTPSConnection("api.weibo.com")  
 	param=urllib.urlencode(param_obj)
@@ -98,7 +103,7 @@ class Status_list():
 		return latest_status_id	
 
 	def pop_oldest(self):
-		return self.status_list.pop()	
+		return self.status_list.pop(0)	
 	
 	def show(self):
 		return self.status_list
