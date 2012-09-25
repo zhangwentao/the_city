@@ -32,6 +32,11 @@ def main():
 	print latest_status_id
 	run()
 
+def reset_some_file():
+	util.write_txt_file(keys_obj['info_dir_path']+keys_obj['weibo_file_name'],'')
+	util.write_txt_file(keys_obj['info_dir_path']+keys_obj['user_name_file_name'],'')
+	util.write_txt_file(keys_obj['info_dir_path']+keys_obj['friends_ids_file_name'],'')	
+
 def get_keys():
 	data = file(KEY_FILE_PATH).readline()
 	return json.loads(data)
@@ -43,6 +48,7 @@ def run():
 		sleep(3)	
 
 def get_status():
+	reset_some_file()
 	global latest_status_id
 	cur_list = city_position.statuses_mentioned(latest_status_id)['statuses']
 	if len(cur_list)>0:
