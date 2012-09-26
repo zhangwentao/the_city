@@ -6,7 +6,10 @@ import urllib
 import json
 import glob
 import os
+import time
 
+
+sleep = time.sleep
 HEADERS = {"Content-type": "application/x-www-form-urlencoded"}
 urlretrieve = urllib.urlretrieve
 
@@ -26,22 +29,32 @@ def get_access_token(client_id,client_secret,usrname,passwd):
 def delete_file_by_type(dir_path,file_type):
 	for f in glob.glob(dir_path+'*.'+file_type):
 		os.unlink(f)
-		
+
 def write_txt_file(file_path,text):
 	text_file = file(file_path,'w')
 	text_file.write((text).encode('gb2312'))
 	text_file.close()
 
 def api_proxy(api_url,param_obj={},method='GET'):
-	conn = httplib.HTTPSConnection("api.weibo.com")  
-	param=urllib.urlencode(param_obj)
-	url = '/2/'+api_url+'.json?'
-	if method == 'GET':
-		conn.request(method,url+param)  
-	elif method == 'POST':
-		conn.request(method,url,param,HEADERS)  
-	backen_data =conn.getresponse().read()  
-	obj = json.loads(backen_data)
+	while True:	
+		try:
+			conn = httplib.HTTPSConnection("api.weibo.com")  
+			param=urllib.urlencode(param_obj)
+			url = '/2/'+api_url+'.json?'
+			if method == 'GET':
+				conn.request(method,url+param)  
+			elif method == 'POST':
+				conn.request(method,url,param,HEADERS)  
+			backen_data =conn.getresponse().read()  
+			obj = json.loads(backen_data)
+		except:
+			wait_second = 2
+			os.system('clear')		
+			print 'net is not ok~,will try after '+str(wait_second)+' second...'
+			print 'please check the internet connection!'
+			sleep(wait_second)
+		else:
+			break
 	return obj
 
 def get_comment_txt(comment_file_path):

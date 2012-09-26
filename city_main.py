@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #-*- coding:utf8 -*-
-
+import os
 import util
 import time
 import json
@@ -24,8 +24,21 @@ def main():
 	global keys_obj
 	global city_position
 	keys_obj = get_keys()
+	net_is_ok = False
 	Client.init(keys_obj['client_id'],keys_obj['client_secret'])
-	city_position = Client(keys_obj['username1'],keys_obj['password1'])
+
+	while not net_is_ok:	
+		try:
+			city_position = Client(keys_obj['username1'],keys_obj['password1'])
+		except:
+			wait_second = 2
+			os.system('clear')		
+			print 'net is not ok~,will try after '+str(wait_second)+' second...'
+			print 'please check the internet connection!'
+			sleep(wait_second)
+		else:
+			net_is_ok = True	
+
 	InfoWriter.init(keys_obj['info_dir_path'],keys_obj['weibo_file_name'],keys_obj['friends_ids_file_name'],keys_obj['lock_file_name'],keys_obj['user_name_file_name'])
 	comment_txt_file_path = keys_obj['info_dir_path']+keys_obj['comment_txt_file_name']
 	latest_status_id = file(keys_obj['info_dir_path']+keys_obj['last_weibo_id_file_name']).readline() 
@@ -48,7 +61,6 @@ def run():
 		sleep(3)	
 
 def get_status():
-	reset_some_file()
 	global latest_status_id
 	cur_list = city_position.statuses_mentioned(latest_status_id)['statuses']
 	if len(cur_list)>0:
@@ -58,11 +70,12 @@ def get_status():
 	print 'st:'+str(len(status_list.show()))
 
 def write_to_local():
+	reset_some_file()
+	util.delete_file_by_type(keys_obj['info_dir_path'],'jpeg')
 	if len(status_list.show()) > 0:
 		cur_status = status_list.pop_oldest()
 		util.write_txt_file(keys_obj['info_dir_path']+keys_obj['last_weibo_id_file_name'],str(cur_status['id']))
 		cur_status['user']['fids'] = city_position.get_somebody_friends_ids(cur_status['user']['id'])['ids']
-		util.delete_file_by_type(keys_obj['info_dir_path'],'jpeg')
 		writer = InfoWriter()
 		city_position.create_comment(cur_status['id'],util.get_comment_txt(comment_txt_file_path))
 		writer.write_info(cur_status)
