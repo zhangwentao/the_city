@@ -35,6 +35,20 @@ def write_txt_file(file_path,text):
 	text_file.write((text).encode('gb2312'))
 	text_file.close()
 
+def formate_output(raw):
+	raw = raw.decode('utf-8')
+	result=u''
+	counter = 0
+	max_count = 14
+	for char in raw:
+		if counter == 14:
+			result+=u' '	
+			counter = 0
+		else:
+			result+=char			
+		counter+=1
+	return result
+
 def api_proxy(api_url,param_obj={},method='GET'):
 	while True:	
 		try:
@@ -113,7 +127,7 @@ class Status_list():
 		new_list.sort(status_cmp)
 		self.status_list.extend(new_list)				
 		latest_status_id = new_list[len(new_list)-1]['id']
-		return latest_status_id	
+		return latest_status_id
 
 	def pop_oldest(self):
 		return self.status_list.pop(0)	
@@ -158,14 +172,20 @@ class InfoWriter():
 
 	def write_fiends_ids(self,id_list):
 		ids_str = ''
+		counter = 0
+		id_list_len = len(id_list)
 		for friend_id in id_list:
-			ids_str += (str(friend_id)+' ') 
+			counter += 1	
+			ids_str += str(friend_id) 
+			if counter < id_list_len:
+				ids_str += ' '	 
  	      	self.write_txt_file(self.__class__.friends_ids_file_name,ids_str) 
 
 	def write_txt_file(self,file_name,text):
 		file_path = self.__class__.info_dir_path + file_name	
 		text_file = file(file_path,'w')
-		text_file.write((text).encode('gb2312'))
+		content = formate_output(text.encode('utf-8'))
+		text_file.write(content.encode('utf-8'))
 		text_file.close()
 	
 	def write_info(self,status_obj):

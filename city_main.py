@@ -71,7 +71,7 @@ def get_status():
 		print 'no new weibo~'
 	if not InfoWriter.is_lock():
 		if id_user_will_be_reply != '':
-			#city_position.create_comment(id_user_will_be_reply,util.get_comment_txt(comment_txt_file_path))
+			city_position.create_comment(id_user_will_be_reply,util.get_comment_txt(comment_txt_file_path))
 			print 'reply to '+id_user_will_be_reply	
 		write_to_local()	
 	print 'status list length:'+str(len(status_list.show()))
