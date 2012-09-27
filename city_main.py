@@ -17,6 +17,7 @@ status_list = Status_list()
 latest_status_id=0
 comment_txt_file_path = ''
 keys_obj={}
+id_user_will_be_reply = ''
 
 def main():
 	global latest_status_id
@@ -65,18 +66,25 @@ def get_status():
 	cur_list = city_position.statuses_mentioned(latest_status_id)['statuses']
 	if len(cur_list)>0:
 		latest_status_id=status_list.put_in(cur_list)
+		print 'latest '+ str(latest_status_id)
+	else:
+		print 'no new weibo~'
 	if not InfoWriter.is_lock():
+		if id_user_will_be_reply != '':
+			#city_position.create_comment(id_user_will_be_reply,util.get_comment_txt(comment_txt_file_path))
+			print 'reply to '+id_user_will_be_reply	
 		write_to_local()	
-	print 'st:'+str(len(status_list.show()))
+	print 'status list length:'+str(len(status_list.show()))
 
 def write_to_local():
+	global id_user_will_be_reply
 	reset_some_file()
 	util.delete_file_by_type(keys_obj['info_dir_path'],'jpeg')
 	if len(status_list.show()) > 0:
 		cur_status = status_list.pop_oldest()
 		util.write_txt_file(keys_obj['info_dir_path']+keys_obj['last_weibo_id_file_name'],str(cur_status['id']))
+		id_user_will_be_reply = str(cur_status['id'])
 		cur_status['user']['fids'] = city_position.get_somebody_friends_ids(cur_status['user']['id'])['ids']
 		writer = InfoWriter()
-		city_position.create_comment(cur_status['id'],util.get_comment_txt(comment_txt_file_path))
 		writer.write_info(cur_status)
 main()
