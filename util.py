@@ -44,10 +44,9 @@ def formate_output(raw):
 		if counter == 14:
 			result+=u' '	
 			counter = 0
-		else:
-			result+=char			
+		result+=char			
 		counter+=1
-	return result
+	return result.encode('utf-8')
 
 def api_proxy(api_url,param_obj={},method='GET'):
 	while True:	
@@ -165,7 +164,7 @@ class InfoWriter():
 		urlretrieve(pic_url,file_name)	
 		
 	def writeWeibo(self,weibo_text):
-		self.write_txt_file(self.__class__.weibo_file_name,weibo_text)	
+		self.write_txt_file(self.__class__.weibo_file_name,formate_output(weibo_text.encode('utf-8')).decode('utf-8'))	
 	
 	def write_name(self,user_name):
 		self.write_txt_file(self.__class__.user_name_file_name,user_name)
@@ -184,8 +183,7 @@ class InfoWriter():
 	def write_txt_file(self,file_name,text):
 		file_path = self.__class__.info_dir_path + file_name	
 		text_file = file(file_path,'w')
-		content = formate_output(text.encode('utf-8'))
-		text_file.write(content.encode('utf-8'))
+		text_file.write(text.encode('gb2312'))
 		text_file.close()
 	
 	def write_info(self,status_obj):
