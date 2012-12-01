@@ -13,6 +13,16 @@ sleep = time.sleep
 HEADERS = {"Content-type": "application/x-www-form-urlencoded"}
 urlretrieve = urllib.urlretrieve
 
+def get_keys(key_file_path):
+	data = ''
+	key_file = file(key_file_path)
+	while True:
+		line = key_file.readline()
+		if len(line) == 0:
+			break
+		data += line
+	return json.loads(data)
+
 def get_access_token(client_id,client_secret,usrname,passwd):
 	param_obj = {'grant_type':'password'};
 	param_obj['client_id']=client_id
@@ -117,6 +127,25 @@ class Client:
 		api_url = "comments/create"	
 		param_obj = {'id':weibo_id,'comment':comment}
 	 	return self.proxy_for(api_url,param_obj,'POST')	
+
+	def get_somebody_info(self,somebody_id):
+		api_url = "users/show"
+		param_obj = {'uid':somebody_id}
+		return self.proxy_for(api_url,param_obj)
+
+	def get_somebody_follower_ids(self,somebody_id):
+		follower_ids = []
+		page_cursor = -1
+		count_perpage = 5000
+		api_url = "friendships/followers/ids"
+		while page_cursor != 0:
+			if page_cursor < 0:
+				page_cursor = 0
+			param_obj = {'uid':somebody_id,'cursor':page_cursor,'count':count_perpage}
+			backen_data = self.proxy_for(api_url,param_obj)
+			page_cursor = backen_data['next_cursor']
+			follower_ids.extend(backen_data['ids'])
+		return follower_ids
 
 class Status_list():
 	def __init__(self):
