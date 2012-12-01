@@ -24,7 +24,7 @@ def main():
 	global comment_txt_file_path
 	global keys_obj
 	global city_position
-	keys_obj = get_keys()
+	keys_obj = util.get_keys(KEY_FILE_PATH)
 	net_is_ok = False
 	Client.init(keys_obj['client_id'],keys_obj['client_secret'])
 
@@ -50,10 +50,6 @@ def reset_some_file():
 	util.write_txt_file(keys_obj['info_dir_path']+keys_obj['weibo_file_name'],'')
 	util.write_txt_file(keys_obj['info_dir_path']+keys_obj['user_name_file_name'],'')
 	util.write_txt_file(keys_obj['info_dir_path']+keys_obj['friends_ids_file_name'],'')	
-
-def get_keys():
-	data = file(KEY_FILE_PATH).readline()
-	return json.loads(data)
 
 def run():
 	while not lock:
