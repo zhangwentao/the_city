@@ -1,2 +1,16 @@
-the_city
-========
+#the_city
+##keys.json
+    {
+        "last_weibo_id_file_name":"",
+        "user_name_file_name":"",
+        "comment_txt_file_name":"",
+        "friends_ids_file_name":"",
+        "weibo_file_name":"",
+        "info_dir_path":"",
+        "lock_file_name":"",
+        "client_id":"",
+        "client_secret":"",
+        "username1":"",
+        "password1":"",
+        "who_follower_avatar":""
+    }
