@@ -59,6 +59,7 @@ def run():
 
 def get_status():
 	global latest_status_id
+	global id_user_will_be_reply
 	cur_list = city_position.statuses_mentioned(latest_status_id)['statuses']
 	if len(cur_list)>0:
 		latest_status_id=status_list.put_in(cur_list)
@@ -68,8 +69,9 @@ def get_status():
 	if not InfoWriter.is_lock():
 		if id_user_will_be_reply != '':
 			city_position.create_comment(id_user_will_be_reply,util.get_comment_txt(comment_txt_file_path))
-			print 'reply to '+id_user_will_be_reply	
-		write_to_local()	
+			print 'reply to '+id_user_will_be_reply
+			id_user_will_be_reply = ''
+		write_to_local()
 	print 'status list length:'+str(len(status_list.show()))
 
 def write_to_local():
