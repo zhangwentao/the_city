@@ -192,6 +192,10 @@ class InfoWriter():
 		file_name = self.__class__.info_dir_path + str(user_id)+'.jpeg' 
 		urlretrieve(pic_url,file_name)	
 		
+	def writeWeiboPic(self,pic_name,pic_url):
+		file_name = self.__class__.info_dir_path + pic_name +'.jpeg' 
+		urlretrieve(pic_url,file_name)	
+
 	def writeWeibo(self,weibo_text):
 		self.write_txt_file(self.__class__.weibo_file_name,formate_output(weibo_text.encode('utf-8')).decode('utf-8'))	
 	
@@ -218,6 +222,7 @@ class InfoWriter():
 	def write_info(self,status_obj):
 		self.writeWeibo(status_obj['text'])
 		self.writePic(status_obj['user']['id'],status_obj['user']['profile_image_url'])
+		self.writeWeiboPic("weibo_pic",status_obj['original_pic'])
 		self.write_fiends_ids(status_obj['user']['fids'])
 		self.write_name(status_obj['user']['name'])
 		self.write_txt_file(self.__class__.lock_file_name,'1')	
