@@ -163,6 +163,11 @@ class Status_list():
 	def show(self):
 		return self.status_list
 
+	def show_ids(self):
+		for status in self.status_list:
+			print status['id']
+		return True;
+
 class InfoWriter():
 	info_dir_path = ''
 	weibo_file_name = ''
