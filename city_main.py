@@ -42,7 +42,7 @@ def main():
 
 	InfoWriter.init(keys_obj['info_dir_path'],keys_obj['weibo_file_name'],keys_obj['friends_ids_file_name'],keys_obj['lock_file_name'],keys_obj['user_name_file_name'])
 	comment_txt_file_path = keys_obj['info_dir_path']+keys_obj['comment_txt_file_name']
-	latest_status_id = file(keys_obj['info_dir_path']+keys_obj['last_weibo_id_file_name']).readline() 
+	latest_status_id = str(int(file(keys_obj['info_dir_path']+keys_obj['last_weibo_id_file_name']).readline()))
 	print latest_status_id
 	run()
 
