@@ -12,9 +12,10 @@ for follower_id in ids:
 	print 'id:'+str(follower_id)
 	info = client.get_somebody_info(follower_id)
 	try:
-		pic_url = info['profile_image_url']
+		#pic_url = info['profile_image_url']
+		pic_url = info['avatar_large']
 		pic_url_list.append(pic_url)
-		urlretrieve(pic_url,'./heads/'+str(follower_id)+'.jpeg')
+		urlretrieve(pic_url,'./heads/'+str(follower_id)+'.jpg')
 	except:
 		print 'err:'+str(follower_id)
 		print 'msg:'+json.dumps(info)
