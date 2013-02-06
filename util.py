@@ -194,7 +194,7 @@ class InfoWriter():
 			return False
 
 	def writePic(self,user_id,pic_url):
-		file_name = self.__class__.info_dir_path + str(user_id)+'.jpeg' 
+		file_name = self.__class__.info_dir_path + str(user_id)+'.jpg' 
 		urlretrieve(pic_url,file_name)	
 		
 	def writeWeiboPic(self,status_obj):
@@ -202,7 +202,7 @@ class InfoWriter():
 			print 'has no weibo pic'
 			return
 		pic_url = status_obj['original_pic']
-		file_name = self.__class__.info_dir_path + 'weibo_pic' +'.jpeg' 
+		file_name = self.__class__.info_dir_path + 'weibo_pic' +'.jpg' 
 		urlretrieve(pic_url,file_name)	
 
 	def writeWeibo(self,weibo_text):
